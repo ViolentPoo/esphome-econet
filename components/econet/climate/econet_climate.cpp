@@ -32,25 +32,19 @@ climate::ClimateTraits EconetClimate::traits() {
   if (this->traits_initialized_) {
     return this->traits_;
   }
-
   auto traits = climate::ClimateTraits();
-
   if (this->current_temperature_id_ && *this->current_temperature_id_) {
     traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE);
   }
-
   if (this->current_humidity_id_ && *this->current_humidity_id_) {
     traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_HUMIDITY);
   }
-
   if (this->target_dehumidification_level_id_ && *this->target_dehumidification_level_id_) {
     traits.add_feature_flags(climate::CLIMATE_SUPPORTS_TARGET_HUMIDITY);
   }
-
   if (!this->single_setpoint_ui_ && this->target_temperature_high_id_ && *this->target_temperature_high_id_) {
     traits.add_feature_flags(climate::CLIMATE_REQUIRES_TWO_POINT_TARGET_TEMPERATURE);
   }
-
   if (this->mode_id_ && *this->mode_id_) {
     for (const auto &entry : this->modes_) {
       if (this->single_setpoint_ui_ && entry.mode == climate::CLIMATE_MODE_HEAT_COOL) {
