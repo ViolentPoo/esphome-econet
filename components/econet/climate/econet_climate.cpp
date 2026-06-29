@@ -69,10 +69,11 @@ void EconetClimate::update_single_setpoint_target_() {
   if (!this->single_setpoint_ui_) {
     return;
   }
-
-  if (this->mode == climate::CLIMATE_MODE_HEAT && !std::isnan(this->target_temperature_low)) {
+  if (this->mode == climate::CLIMATE_MODE_HEAT &&
+      !std::isnan(this->target_temperature_low)) {
     this->target_temperature = this->target_temperature_low;
-  } else if (this->mode == climate::CLIMATE_MODE_COOL && !std::isnan(this->target_temperature_high)) {
+  } else if (this->mode == climate::CLIMATE_MODE_COOL &&
+             !std::isnan(this->target_temperature_high)) {
     this->target_temperature = this->target_temperature_high;
   } else if (!std::isnan(this->target_temperature_high)) {
     this->target_temperature = this->target_temperature_high;
