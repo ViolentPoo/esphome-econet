@@ -53,7 +53,6 @@ climate::ClimateTraits EconetClimate::traits() {
       traits.add_supported_mode(entry.mode);
     }
   }
-
   this->traits_ = traits;
   this->traits_initialized_ = true;
   return this->traits_;
@@ -127,7 +126,6 @@ void EconetClimate::setup() {
     }
     this->set_supported_custom_presets(presets);
   }
-
   if (this->custom_fan_mode_id_ && *this->custom_fan_mode_id_) {
     std::vector<const char *> fans;
     fans.reserve(this->custom_fan_modes_.size());
@@ -136,14 +134,12 @@ void EconetClimate::setup() {
     }
     this->set_supported_custom_fan_modes(fans);
   }
-
   this->register_float_listener(this->current_temperature_id_, &this->current_temperature, true);
   this->register_float_listener(this->target_temperature_id_, &this->target_temperature, true);
   this->register_float_listener(this->target_temperature_low_id_, &this->target_temperature_low, true);
   this->register_float_listener(this->target_temperature_high_id_, &this->target_temperature_high, true);
   this->register_float_listener(this->current_humidity_id_, &this->current_humidity, false);
   this->register_float_listener(this->target_dehumidification_level_id_, &this->target_humidity, false);
-
   if (this->mode_id_ && *this->mode_id_) {
     this->parent_->register_listener(
         this->mode_id_, this->request_mod_, this->request_once_,
@@ -162,7 +158,6 @@ void EconetClimate::setup() {
         },
         false, this->src_adr_);
   }
-
   if (this->custom_preset_id_ && *this->custom_preset_id_) {
     this->parent_->register_listener(
         this->custom_preset_id_, this->request_mod_, this->request_once_,
@@ -179,10 +174,8 @@ void EconetClimate::setup() {
         },
         false, this->src_adr_);
   }
-
   this->register_fan_listener(this->custom_fan_mode_id_, &this->fan_mode_, true);
   this->register_fan_listener(this->custom_fan_mode_no_schedule_id_, &this->fan_mode_no_schedule_, false);
-
   if (this->follow_schedule_id_ && *this->follow_schedule_id_) {
     this->parent_->register_listener(
         this->follow_schedule_id_, this->request_mod_, this->request_once_,
@@ -219,11 +212,9 @@ void EconetClimate::set_float_datapoint(const char *id, optional<float> value, b
 void EconetClimate::control(const climate::ClimateCall &call) {
   if (this->single_setpoint_ui_) {
     climate::ClimateMode requested_mode = this->mode;
-
     if (call.get_mode().has_value()) {
       requested_mode = call.get_mode().value();
     }
-
     if (call.get_target_temperature().has_value()) {
       if (requested_mode == climate::CLIMATE_MODE_HEAT) {
         this->set_float_datapoint(this->target_temperature_low_id_, call.get_target_temperature(), true);
@@ -236,9 +227,7 @@ void EconetClimate::control(const climate::ClimateCall &call) {
     this->set_float_datapoint(this->target_temperature_low_id_, call.get_target_temperature_low(), true);
     this->set_float_datapoint(this->target_temperature_high_id_, call.get_target_temperature_high(), true);
   }
-
   this->set_float_datapoint(this->target_dehumidification_level_id_, call.get_target_humidity(), false);
-
   if (call.get_mode().has_value() && this->mode_id_ && *this->mode_id_) {
     climate::ClimateMode mode = call.get_mode().value();
     auto it = std::find_if(this->modes_.begin(), this->modes_.end(),
@@ -247,7 +236,6 @@ void EconetClimate::control(const climate::ClimateCall &call) {
       this->parent_->set_enum_datapoint_value(this->mode_id_, it->id, this->src_adr_);
     }
   }
-
   if (call.has_custom_preset() && this->custom_preset_id_ && *this->custom_preset_id_) {
     auto preset = call.get_custom_preset();
     auto it = std::find_if(this->custom_presets_.begin(), this->custom_presets_.end(),
@@ -256,7 +244,6 @@ void EconetClimate::control(const climate::ClimateCall &call) {
       this->parent_->set_enum_datapoint_value(this->custom_preset_id_, it->id, this->src_adr_);
     }
   }
-
   if (call.has_custom_fan_mode() && this->custom_fan_mode_id_ && *this->custom_fan_mode_id_) {
     auto fan_mode = call.get_custom_fan_mode();
     auto it = std::find_if(this->custom_fan_modes_.begin(), this->custom_fan_modes_.end(),
